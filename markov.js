@@ -1,6 +1,6 @@
 // https://mikebifulco.com/posts/javascript-filter-boolean
 
-let order = 100; // length of ngram
+let order = 10; // length of ngram
 let songLength = 1400;
 const synth = instruments[6]; // choose synth
 
