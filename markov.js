@@ -1,7 +1,16 @@
 // https://mikebifulco.com/posts/javascript-filter-boolean
 
-let order = 1; // length of ngram
-let songLength = 1498;
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
+// https://gomakethings.com/how-to-get-the-value-of-an-input-as-a-number-with-vanilla-javascript/
+const orderInput = document.querySelector("#order");
+let order = 0; // length of ngram
+// Handle number changes
+orderInput.addEventListener("input", function () {
+  // As a number
+  order = parseFloat(orderInput.value);
+});
+
+let songLength = 1400;
 const synth = instruments[0]; // choose synth
 
 // get the 'text' (music data)
@@ -21,34 +30,19 @@ function setup() {
   // console.log(musicData);
 
   musicArray();
+  createP("Original notes: ");
   createP(originalNotes);
 
-  // loop through music arr and get ngram
-  for (let i = 0; i <= newMusicArr.length - order; i++) {
-    // get 'substring' according to ngram length
-    let gram = newMusicArr.slice(i, i + order);
-
-    // get name
-    let gramNameSeq = "";
-    for (let k = 0; k < gram.length; k++) {
-      gramNameSeq += gram[k].name + " ";
-    }
-
-    // if nothing found make an array
-    // otherwise push the next 'character'
-    if (!ngrams[gramNameSeq]) {
-      ngrams[gramNameSeq] = []; // if nothing found make an array
-    }
-    ngrams[gramNameSeq].push(newMusicArr[i + order]); // otherwise push the next 'character' in
-    // console.log("fallback");
-    // console.log(musicArr[i + 3].name);
-  }
-  console.log(ngrams);
   button = createButton("Generate");
   button.mousePressed(markovIt);
 }
 
 function markovIt() {
+  ngramGenerate();
+
+  console.log("order");
+  console.log(order);
+
   // start with first note from original music data
   let currentGram = newMusicArr.slice(0, order);
   console.log("initial gram");
@@ -235,4 +229,28 @@ function musicArray() {
 
   console.log("new music");
   console.log(newMusicArr);
+}
+
+function ngramGenerate() {
+  // loop through music arr and get ngram
+  for (let i = 0; i <= newMusicArr.length - order; i++) {
+    // get 'substring' according to ngram length
+    let gram = newMusicArr.slice(i, i + order);
+
+    // get name
+    let gramNameSeq = "";
+    for (let k = 0; k < gram.length; k++) {
+      gramNameSeq += gram[k].name + " ";
+    }
+
+    // if nothing found make an array
+    // otherwise push the next 'character'
+    if (!ngrams[gramNameSeq]) {
+      ngrams[gramNameSeq] = []; // if nothing found make an array
+    }
+    ngrams[gramNameSeq].push(newMusicArr[i + order]); // otherwise push the next 'character' in
+    // console.log("fallback");
+    // console.log(musicArr[i + 3].name);
+  }
+  console.log(ngrams);
 }
