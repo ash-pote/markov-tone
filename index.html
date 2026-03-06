@@ -15,12 +15,33 @@
 
   <body>
     <h1>Markov with Tone.js</h1>
+    <p>Refresh to restart</p>
 
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number#:~:text=elements%20of%20type%20number,by%20tapping%20with%20a%20fingertip. -->
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number -->
     <label for="order">Order (ngram size):</label>
     <input type="number" id="order" value="1" min="1" max="1400" />
 
+    <!-- <fieldset>
+      <legend>Select synth:</legend>
+
+      <div>
+        <input type="radio" id="huey" name="drone" value="huey" checked />
+        <label for="huey">Huey</label>
+      </div>
+
+      <div>
+        <input type="radio" id="dewey" name="drone" value="dewey" />
+        <label for="dewey">Dewey</label>
+      </div>
+
+      <div>
+        <input type="radio" id="louie" name="drone" value="louie" />
+        <label for="louie">Louie</label>
+      </div>
+    </fieldset> -->
+
+    <button id="generate">Generate</button>
     <button id="basic">Play</button>
 
     <script src="./load.js"></script>

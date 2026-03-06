@@ -10,6 +10,14 @@ orderInput.addEventListener("input", function () {
   order = parseFloat(orderInput.value);
 });
 
+const synthInput = document.querySelector("#order");
+// let order = 0; // length of ngram
+// // Handle number changes
+// orderInput.addEventListener("input", function () {
+//   // As a number
+//   order = parseFloat(orderInput.value);
+// });
+
 let songLength = 1400;
 const synth = instruments[0]; // choose synth
 
@@ -30,11 +38,8 @@ function setup() {
   // console.log(musicData);
 
   musicArray();
-  createP("Original notes: ");
-  createP(originalNotes);
-
-  button = createButton("Generate");
-  button.mousePressed(markovIt);
+  // createP("Original notes: ");
+  // createP(originalNotes);
 }
 
 function markovIt() {

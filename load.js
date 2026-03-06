@@ -6,6 +6,10 @@ document.querySelector("#basic").addEventListener("click", async () => {
   playSong();
 });
 
+document.querySelector("#generate").addEventListener("click", async () => {
+  markovIt();
+});
+
 // Load the JSON and create an object
 function preload() {
   musicData = loadJSON("./debussy.json");
