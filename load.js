@@ -10,6 +10,11 @@ document.querySelector("#generate").addEventListener("click", async () => {
   markovIt();
 });
 
+// https://developer.mozilla.org/en-US/docs/Web/API/Location/reload
+document.querySelector("#restart").addEventListener("click", async () => {
+  window.location.reload();
+});
+
 // Load the JSON and create an object
 function preload() {
   musicData = loadJSON("./debussy.json");
