@@ -6,6 +6,7 @@ document.querySelector("#basic").addEventListener("click", async () => {
   playSong();
 });
 
+// 4
 document.querySelector("#generate").addEventListener("click", async () => {
   markovIt();
 });
