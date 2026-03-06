@@ -2,7 +2,7 @@
 
 let order = 2; // length of ngram
 let songLength = 1400;
-const synth = instruments[6]; // choose synth
+const synth = instruments[0]; // choose synth
 
 // get the 'text' (music data)
 let musicData;
