@@ -1,7 +1,7 @@
 // https://mikebifulco.com/posts/javascript-filter-boolean
 
 let order = 1; // length of ngram
-let songLength = 1400;
+let songLength = 1498;
 const synth = instruments[0]; // choose synth
 
 // get the 'text' (music data)
@@ -18,7 +18,7 @@ let resultData = [];
 
 function setup() {
   noCanvas();
-  console.log(musicData);
+  // console.log(musicData);
 
   musicArray();
   createP(originalNotes);
@@ -39,7 +39,7 @@ function setup() {
     if (!ngrams[gramNameSeq]) {
       ngrams[gramNameSeq] = []; // if nothing found make an array
     }
-    ngrams[gramNameSeq].push(newMusicArr[i + 3]); // otherwise push the next 'character' in
+    ngrams[gramNameSeq].push(newMusicArr[i + order]); // otherwise push the next 'character' in
     // console.log("fallback");
     // console.log(musicArr[i + 3].name);
   }
@@ -55,76 +55,80 @@ function markovIt() {
   console.log(currentGram);
 
   // change to string name
-  // and get individual key data
   let currentGramName = "";
-  let prevTime = 0.625;
   for (let k = 0; k < currentGram.length; k++) {
     currentGramName += currentGram[k].name + " ";
-
-    let math = prevTime + currentGram[k].timeAfter;
-    // console.log("time after: " + currentGram[k].timeAfter);
-    // console.log("time: " + math);
-    // console.log("-------------------");
-
-    if (prevTime)
-      resultData.push({
-        name: currentGram[k].name,
-        duration: currentGram[k].duration,
-        timeAfter: currentGram[k].timeAfter,
-        time: prevTime + currentGram[k].timeAfter, // work out time based on timeAfter
-        velocity: currentGram[k].vel,
-      });
-    prevTime = math;
   }
 
   // result of generation
   let result = currentGramName;
 
+  let startTime = 0.625;
   // generate according to chisen length
   for (let i = 0; i < songLength; i++) {
     // console.log("current result");
     // console.log(result);
 
-    console.log("current gram name");
-    console.log(currentGramName);
+    // console.log("current gram name");
+    // console.log(currentGramName);
     // get possibilities of current gram
     let possibilities = ngrams[currentGramName];
 
-    if (!possibilities || possibilities[0] !== undefined) {
+    if (!possibilities || possibilities[0] == undefined) {
       console.log("------------using fallback");
       currentGram = musicArr.slice(i + order, i + order * 2); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-      console.log("new");
-      console.log(currentGram);
+      // console.log("new");
+      // console.log(currentGram);
 
       // change into string
       currentGramName = "";
       for (let k = 0; k < currentGram.length; k++) {
         currentGramName += currentGram[k].name + " ";
       }
-      console.log("new name");
-      console.log(currentGramName);
+      // console.log("new name");
+      // console.log(currentGramName);
 
       // get next possible key
       possibilities = ngrams[currentGramName];
     } else {
       console.log("------------new possibility found");
-      console.log(ngrams[currentGramName]);
+      // console.log(ngrams[currentGramName]);
     }
     console.log("possibilities");
     console.log(possibilities);
 
+    // remove undefined
     let filterPos = possibilities.filter(Boolean); // https://mikebifulco.com/posts/javascript-filter-boolean
 
-    // get random element from that array
+    // get random element from filtered possibilities array
     let randomNext = floor(random(0, filterPos.length));
     let next = filterPos[randomNext];
 
     console.log("Next");
     console.log(next);
+
     // add next key data to resultArr
-    resultData.push(next);
-    console.log("result data");
-    console.log(resultData);
+
+    let math = startTime + next.timeAfter; // + delay
+    console.log("Start time: " + startTime);
+    console.log("delay: " + next.timeAfter);
+    console.log("time: " + math);
+    console.log("-------------------");
+
+    if (startTime)
+      resultData.push({
+        name: next.name,
+        duration: next.duration,
+        // timeAfter: next.timeAfter,
+        time: startTime + next.timeAfter, // delay, work out time based on timeAfter
+        velocity: next.vel,
+      });
+    startTime = math; // startTime is now updated with new time
+
+    // resultData.push(next);
+
+    // console.log("result data");
+    // console.log(resultData);
 
     // add to result
     result += next.name + " ";
@@ -146,8 +150,8 @@ function markovIt() {
       resultClean.length - order,
       resultClean.length,
     );
-    console.log("resultArr sub string");
-    console.log(resultArr);
+    // console.log("resultArr sub string");
+    // console.log(resultArr);
 
     // convert back into string
     currentGramName = "";
