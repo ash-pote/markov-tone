@@ -21,31 +21,59 @@
     <label for="order">Order (ngram size):</label>
     <input type="number" id="order" value="1" min="1" max="1400" />
 
-    <!-- <fieldset>
-      <legend>Select synth:</legend>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio -->
+    <form>
+      <fieldset>
+        <legend>Select synth:</legend>
 
-      <div>
-        <input type="radio" id="huey" name="drone" value="huey" checked />
-        <label for="huey">Huey</label>
-      </div>
+        <div>
+          <input type="radio" id="Basic" name="synth" value="0" checked />
+          <label for="huey">Basic</label>
+        </div>
 
-      <div>
-        <input type="radio" id="dewey" name="drone" value="dewey" />
-        <label for="dewey">Dewey</label>
-      </div>
+        <div>
+          <input type="radio" id="AMSynth" name="synth" value="1" />
+          <label for="dewey">AMSynth</label>
+        </div>
 
-      <div>
-        <input type="radio" id="louie" name="drone" value="louie" />
-        <label for="louie">Louie</label>
-      </div>
-    </fieldset> -->
+        <div>
+          <input type="radio" id="duoSynth" name="synth" value="2" />
+          <label for="duoSynth">duoSynth</label>
+        </div>
 
-    <button id="generate">Generate</button>
-    <button id="basic">Play</button>
-    <button id="restart">Restart</button>
+        <div>
+          <input type="radio" id="fmSynth" name="synth" value="3" />
+          <label for="fmSynth">fmSynth</label>
+        </div>
 
-    <script src="./load.js"></script>
-    <script src="./markov.js"></script>
-    <!-- <script src="./sketch.js"></script> -->
+        <div>
+          <input type="radio" id="metalSynth" name="synth" value="4" />
+          <label for="metalSynth">metalSynth</label>
+        </div>
+
+        <div>
+          <input type="radio" id="monoSynth" name="synth" value="5" />
+          <label for="duoSynth">monoSynth</label>
+        </div>
+
+        <div>
+          <input type="radio" id="MembraneSynth" name="synth" value="6" />
+          <label for="duoSynth">MembraneSynth</label>
+        </div>
+      </fieldset>
+    </form>
+    <p>
+      <!-- <button id="btn">Show Selected Value</button>
+    </p>
+    <p id="output"></p> -->
+
+      <button id="generate">Generate</button>
+      <button id="basic">Play</button>
+      <button id="restart">Restart</button>
+
+      <script src="./load.js"></script>
+      <script src="./markov.js"></script>
+      <!-- <script src="./sketch.js"></script> -->
+    </p>
   </body>
 </html>

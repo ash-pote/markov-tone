@@ -11,15 +11,20 @@ orderInput.addEventListener("input", function () {
 });
 
 const synthInput = document.querySelector("#order");
-// let order = 0; // length of ngram
-// // Handle number changes
-// orderInput.addEventListener("input", function () {
-//   // As a number
-//   order = parseFloat(orderInput.value);
+let synth = instruments[0]; // choose synth
+
+// const btn = document.querySelector("#btn");
+
+// https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
+const radioButtons = document.querySelectorAll('input[name="synth"]');
+let selectedSize = 0;
+// btn.addEventListener("click", () => {
+//   output.innerText = selectedSize
+//     ? `You selected ${selectedSize}`
+//     : `You haven't selected any size`;
 // });
 
-let songLength = 1400;
-const synth = instruments[0]; // choose synth
+let songLength = 1498;
 
 // get the 'text' (music data)
 let musicData;
@@ -40,6 +45,18 @@ function setup() {
   musicArray();
   // createP("Original notes: ");
   // createP(originalNotes);
+}
+
+function draw() {
+  // https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
+  for (const radioButton of radioButtons) {
+    if (radioButton.checked) {
+      selectedSize = parseFloat(radioButton.value);
+      break;
+    }
+  }
+
+  synth = instruments[selectedSize]; // choose synth
 }
 
 function markovIt() {
