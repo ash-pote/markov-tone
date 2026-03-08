@@ -1,130 +1,117 @@
-// https://mikebifulco.com/posts/javascript-filter-boolean
+// ---------------------------------
+// References:
+// See number in code comments for code written from reference
 
-// https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
-// https://gomakethings.com/how-to-get-the-value-of-an-input-as-a-number-with-vanilla-javascript/
+// 1: Get input value: https://gomakethings.com/how-to-get-the-value-of-an-input-as-a-number-with-vanilla-javascript/
+// 2: Get radio button values: https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
+
+// 3: Coding Train Markov Chains Tutorial: https://www.youtube.com/watch?v=eGFJ8vugIWA
+
+// 4: Slice: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+// 5: Remove undefined (Array.filter(Boolean)): https://mikebifulco.com/posts/javascript-filter-boolean
+// 6: Split: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
+
+// 7: Tone.js (Play Notes): https://github.com/Tonejs/Midi/blob/master/examples/load.html
+// 8: Tone.js StackOverflow (PlayNotes): // Source - https://stackoverflow.com/a/71080536, Posted by s1gr1d, Retrieved 2026-03-08, License - CC BY-SA 4.0
+
+// 9: Spread Syntax: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+
+// 10: Tone.js Starting Audio: https://github.com/Tonejs/Tone.js#starting-audio
+// 11: Reload: https://developer.mozilla.org/en-US/docs/Web/API/Location/reload
+
+// 12: Tone.js instruments: https://tonejs.github.io/
+// 13: Tone.js Docs: https://tonejs.github.io/docs/15.1.22/index.html
+
+// 14.1: Understanding inputs: // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
+// 14.2: Understanding inputs: // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number#:~:text=elements%20of%20type%20number,by%20tapping%20with%20a%20fingertip.
+// 14.3 Understanding input: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio
+// ---------------------------------
+
+// ---------------------------------
+// Update order number value
 const orderInput = document.querySelector("#order");
-let order = 0; // length of ngram
-// Handle number changes
+let order = 1; // length of ngram // min 1
+
+// 1: Get input value
 orderInput.addEventListener("input", function () {
-  // As a number
-  order = parseFloat(orderInput.value);
+  order = parseFloat(orderInput.value); // 1: Parse as a number
 });
+// ---------------------------------
 
-const synthInput = document.querySelector("#order");
-let synth = instruments[0]; // choose synth
-
-// const btn = document.querySelector("#btn");
-
-// https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
-const radioButtons = document.querySelectorAll('input[name="synth"]');
-let selectedSize = 0;
-// btn.addEventListener("click", () => {
-//   output.innerText = selectedSize
-//     ? `You selected ${selectedSize}`
-//     : `You haven't selected any size`;
-// });
-
-let songLength = 1498;
-
-// get the 'text' (music data)
+let songLength = 1498; // change for shorter song
 let musicData;
 let musicArr = [];
 let newMusicArr = [];
 let originalNotes = [];
-
 let ngrams = {};
-
-let button;
-
 let resultData = [];
 
 function setup() {
-  noCanvas();
-  // console.log(musicData);
+  noCanvas(); // 3: Coding Train Markov Chains Tutorial
 
-  musicArray();
-  // createP("Original notes: ");
-  // createP(originalNotes);
+  musicArray(); // Get relevant music data from midi in musicArr
 }
 
 function draw() {
-  // https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
-  for (const radioButton of radioButtons) {
-    if (radioButton.checked) {
-      selectedSize = parseFloat(radioButton.value);
-      break;
-    }
-  }
-
-  synth = instruments[selectedSize]; // choose synth
+  updateSynth(); // 2: Get radio button values // see in functions.js
+  console.log(order);
 }
 
 function markovIt() {
-  ngramGenerate();
+  ngramGenerate(); // 3: Coding Train Markov Chains Tutorial // places ngrams in ngrams array
 
-  console.log("order");
-  console.log(order);
+  // start with first ngram
+  let currentGram = newMusicArr.slice(0, order); // 3: Coding Train Markov Chains Tutorial // modified for array
 
-  // start with first note from original music data
-  let currentGram = newMusicArr.slice(0, order);
-  console.log("initial gram");
-  console.log(currentGram);
-
-  // change to string name
+  // change to string name (Easier for selecting ngrams)
   let currentGramName = "";
   for (let k = 0; k < currentGram.length; k++) {
     currentGramName += currentGram[k].name + " ";
   }
 
   // result of generation
-  let result = currentGramName;
+  let result = currentGramName; // 3: Coding Train Markov Chains Tutorial
 
   let startTime = 0.625;
-  // generate according to chisen length
+
+  // generate according to chosen song length
   for (let i = 0; i < songLength; i++) {
-    // console.log("current result");
-    // console.log(result);
+    // console.log("current result: " + result); // will change each loop
+    // console.log("current gram name: " + currentGramName); // will change each loop
 
-    // console.log("current gram name");
-    // console.log(currentGramName);
-    // get possibilities of current gram
-    let possibilities = ngrams[currentGramName];
+    // get possibilities of current ngram
+    let possibilities = ngrams[currentGramName]; // 3: Coding Train Markov Chains Tutorial
 
+    // if there are no possibilities, use fallback
     if (!possibilities || possibilities[0] == undefined) {
       console.log("------------using fallback");
-      currentGram = musicArr.slice(i + order, i + order * 2); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-      // console.log("new");
-      // console.log(currentGram);
+      currentGram = musicArr.slice(i + order, i + order * 2); // 4: Slice:
 
-      // change into string
+      // change array into string
       currentGramName = "";
       for (let k = 0; k < currentGram.length; k++) {
         currentGramName += currentGram[k].name + " ";
       }
-      // console.log("new name");
-      // console.log(currentGramName);
 
-      // get next possible key
-      possibilities = ngrams[currentGramName];
+      // get next possible ngram
+      possibilities = ngrams[currentGramName]; // 3: Coding Train Markov Chains Tutorial
     } else {
       console.log("------------new possibility found");
-      // console.log(ngrams[currentGramName]);
     }
-    console.log("possibilities");
-    console.log(possibilities);
+
+    console.log("possibilities"); // list of possibilities
+    console.log(possibilities); // list of possibilities
 
     // remove undefined
-    let filterPos = possibilities.filter(Boolean); // https://mikebifulco.com/posts/javascript-filter-boolean
+    let filterPos = possibilities.filter(Boolean); // 5: Remove undefined
 
     // get random element from filtered possibilities array
-    let randomNext = floor(random(0, filterPos.length));
-    let next = filterPos[randomNext];
-
+    let randomNext = floor(random(0, filterPos.length)); // 3: Coding Train Markov Chains Tutorial
+    let next = filterPos[randomNext]; // 3: Coding Train Markov Chains Tutorial
     console.log("Next");
     console.log(next);
 
     // add next key data to resultArr
-
     let math = startTime + next.timeAfter; // + delay
     console.log("Start time: " + startTime);
     console.log("delay: " + next.timeAfter);
@@ -135,41 +122,36 @@ function markovIt() {
       resultData.push({
         name: next.name,
         duration: next.duration,
-        // timeAfter: next.timeAfter,
         time: startTime + next.timeAfter, // delay, work out time based on timeAfter
         velocity: next.vel,
       });
     startTime = math; // startTime is now updated with new time
 
-    // resultData.push(next);
-
-    // console.log("result data");
-    // console.log(resultData);
+    // console.log("result data: " + resultData); // result data updated with next ngram & time
 
     // add to result
-    result += next.name + " ";
+    result += next.name + " "; // 3: Coding Train Markov Chains Tutorial
     // console.log("result");
     // console.log(result);
 
     // convert result back into array
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
-    let resultClean = result.split(" ");
-    // console.log("split result");
-    // console.log(resultClean);
-    // removing space
-    resultClean.pop();
-    // console.log("pop result");
-    // console.log(resultClean);
+    // Clean -------------------------------
+    // convert result back into array
+    let resultClean = result.split(" "); // 6: Split
+    // console.log("split result: " + resultClean);
 
-    // change currentGram to the last gram in the result text
+    resultClean.pop(); // remove last array value
+    // console.log("Cleaned result: " + resultClean);
+    // --------------------------------------
+
+    // change currentGram to the last ngram in the result text
+    // // 3: Coding Train Markov Chains Tutorial - modified to use array
     let resultArr = resultClean.slice(
       resultClean.length - order,
       resultClean.length,
     );
-    // console.log("resultArr sub string");
-    // console.log(resultArr);
 
-    // convert back into string
+    // convert back into ngram string name
     currentGramName = "";
     for (let k = 0; k < resultArr.length; k++) {
       currentGramName += resultArr[k] + " ";
@@ -178,18 +160,18 @@ function markovIt() {
     console.log(currentGramName);
   }
 
-  console.log("result data");
+  console.log("result data: "); // entire markov result
   console.log(resultData);
-  createP(result);
+  createP(result); // 3: Coding Train Markov Chains Tutorial - place entire markov result in p tag
 }
 
 function playSong() {
-  // 1 & 2
-  console.log("playing: ");
-  console.log(resultData);
+  console.log("playing: " + resultData);
 
+  // 7: Tone.js (Play Notes)
+  // 8: Tone.js StackOverflow
   resultData.forEach((note) => {
-    const now = Tone.now() + 0.2; //3
+    const now = Tone.now() + 0.2;
     currentNote = note.name;
 
     synth.triggerAttackRelease(
@@ -204,7 +186,7 @@ function playSong() {
 // original song data
 function musicArray() {
   // Put relevant music data into array
-  // 1 & 2
+  // 7: Tone.js
   musicData.tracks.forEach((track) => {
     const notes = track.notes;
 
@@ -221,6 +203,7 @@ function musicArray() {
     });
   });
 
+  // put note names in original notes array
   for (let i = 0; i < musicArr.length; i++) {
     originalNotes.push(musicArr[i].name);
   }
@@ -253,11 +236,14 @@ function musicArray() {
   console.log(newMusicArr);
 }
 
+// 3: Coding Train Markov Chains
 function ngramGenerate() {
   // loop through music arr and get ngram
   for (let i = 0; i <= newMusicArr.length - order; i++) {
     // get 'substring' according to ngram length
-    let gram = newMusicArr.slice(i, i + order);
+    let gram = newMusicArr.slice(i, i + order); // 3: Coding Train Markov Chains // modified to use array
+    // console.log("Current gram: ");
+    // console.log(gram);
 
     // get name
     let gramNameSeq = "";
@@ -268,11 +254,10 @@ function ngramGenerate() {
     // if nothing found make an array
     // otherwise push the next 'character'
     if (!ngrams[gramNameSeq]) {
-      ngrams[gramNameSeq] = []; // if nothing found make an array
+      ngrams[gramNameSeq] = []; // if nothing found make an array // 3: Coding Train Markov Chains
     }
-    ngrams[gramNameSeq].push(newMusicArr[i + order]); // otherwise push the next 'character' in
-    // console.log("fallback");
-    // console.log(musicArr[i + 3].name);
+    ngrams[gramNameSeq].push(newMusicArr[i + order]); // otherwise push the next 'character' in // 3: Coding Train Markov Chains
   }
+  console.log("Ngrams: ");
   console.log(ngrams);
 }

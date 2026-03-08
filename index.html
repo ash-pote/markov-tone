@@ -16,12 +16,13 @@
   <body>
     <h1>Markov with Tone.js</h1>
 
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number#:~:text=elements%20of%20type%20number,by%20tapping%20with%20a%20fingertip. -->
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number -->
+    <!-- 14.1 Understanding Inputs -->
+    <!-- 14.2 Understanding Inputs -->
     <label for="order">Order (ngram size):</label>
     <input type="number" id="order" value="1" min="1" max="1400" />
 
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio -->
+    <!-- 14.3 Understanding inputs (Radio) -->
+    <!-- 2: Get radio button values: -->
     <form>
       <fieldset>
         <legend>Select synth:</legend>
@@ -63,21 +64,16 @@
       </fieldset>
     </form>
     <p>
-      <!-- <button id="btn">Show Selected Value</button>
-    </p>
-    <p id="output"></p> -->
-
       <button id="generate">Generate</button>
-            <button id="restart">Restart</button>
-            <p>Wait for Notes to Generate</p>
-      <button id="basic">Play</button>
-
-
-
-
-      <script src="./load.js"></script>
-      <script src="./markov.js"></script>
-      <!-- <script src="./sketch.js"></script> -->
+      <!-- 2: Get radio button values: -->
+      <button id="restart">Restart</button>
+      <!-- 2: Get radio button values: -->
     </p>
+
+    <p>Wait for Notes to Generate</p>
+    <button id="basic">Play</button>
+
+    <script src="./functions.js"></script>
+    <script src="./markov.js"></script>
   </body>
 </html>
