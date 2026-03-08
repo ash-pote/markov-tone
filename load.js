@@ -18,7 +18,7 @@ document.querySelector("#restart").addEventListener("click", async () => {
 
 // Load the JSON and create an object
 function preload() {
-  musicData = loadJSON("./debussy.json");
+  midiData = loadJSON("./debussy.json");
 }
 
 let basic = new Tone.PolySynth(Tone.Synth).toDestination();
@@ -47,3 +47,15 @@ let instruments = [
   monoSynth,
   MembraneSynth,
 ];
+
+function updateRadioValues() {
+  // https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
+  for (const radioButton of radioButtons) {
+    if (radioButton.checked) {
+      selectedSize = parseFloat(radioButton.value);
+      break;
+    }
+  }
+
+  synth = instruments[selectedSize]; // choose synth
+}

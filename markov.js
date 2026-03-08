@@ -2,37 +2,31 @@
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
 // https://gomakethings.com/how-to-get-the-value-of-an-input-as-a-number-with-vanilla-javascript/
+let songLength = 1498;
+
 const orderInput = document.querySelector("#order");
 let order = 0; // length of ngram
-// Handle number changes
+
+// update order value
 orderInput.addEventListener("input", function () {
   // As a number
   order = parseFloat(orderInput.value);
 });
 
 const synthInput = document.querySelector("#order");
-let synth = instruments[0]; // choose synth
-
-// const btn = document.querySelector("#btn");
+let synth = instruments[0]; // choose synth // default = 0
 
 // https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
 const radioButtons = document.querySelectorAll('input[name="synth"]');
 let selectedSize = 0;
-// btn.addEventListener("click", () => {
-//   output.innerText = selectedSize
-//     ? `You selected ${selectedSize}`
-//     : `You haven't selected any size`;
-// });
-
-let songLength = 1498;
 
 // get the 'text' (music data)
-let musicData;
+let midiData;
 let musicArr = [];
 let newMusicArr = [];
 let originalNotes = [];
 
-let ngrams = {};
+let ngrams = {}; // ngram data
 
 let button;
 
@@ -40,23 +34,12 @@ let resultData = [];
 
 function setup() {
   noCanvas();
-  // console.log(musicData);
 
-  musicArray();
-  // createP("Original notes: ");
-  // createP(originalNotes);
+  musicArray(); // get original song data
 }
 
 function draw() {
-  // https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
-  for (const radioButton of radioButtons) {
-    if (radioButton.checked) {
-      selectedSize = parseFloat(radioButton.value);
-      break;
-    }
-  }
-
-  synth = instruments[selectedSize]; // choose synth
+  updateRadioValues(); // update synth value
 }
 
 function markovIt() {
@@ -125,9 +108,9 @@ function markovIt() {
 
     // add next key data to resultArr
 
-    let math = startTime + next.timeAfter; // + delay
+    let math = startTime + next.delay; // + delay
     console.log("Start time: " + startTime);
-    console.log("delay: " + next.timeAfter);
+    console.log("delay: " + next.delay);
     console.log("time: " + math);
     console.log("-------------------");
 
@@ -136,7 +119,7 @@ function markovIt() {
         name: next.name,
         duration: next.duration,
         // timeAfter: next.timeAfter,
-        time: startTime + next.timeAfter, // delay, work out time based on timeAfter
+        time: startTime + next.delay, // delay, work out time based on timeAfter
         velocity: next.vel,
       });
     startTime = math; // startTime is now updated with new time
@@ -205,7 +188,7 @@ function playSong() {
 function musicArray() {
   // Put relevant music data into array
   // 1 & 2
-  musicData.tracks.forEach((track) => {
+  midiData.tracks.forEach((track) => {
     const notes = track.notes;
 
     notes.forEach((note) => {
@@ -229,21 +212,18 @@ function musicArray() {
 
   for (let i = 0; i < musicArr.length; i++) {
     let currentNote = musicArr[i];
-    // console.log("current note time: " + currentNote.time);
-    // console.log("prev note time: " + prevNote);
+
     let maths = currentNote.time - prevNote;
-    // console.log("time after: " + maths);
-    // console.log("---------------");
 
     // working out time after prev time
     if (i === 0) {
       // if first push time: 0
-      currentNote = { ...currentNote, timeAfter: prevNote }; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+      currentNote = { ...currentNote, delay: prevNote }; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
       newMusicArr.push(currentNote);
       prevNote = currentNote.time;
     } else {
       // push currentnote time, minus the previous note time
-      currentNote = { ...currentNote, timeAfter: currentNote.time - prevNote }; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+      currentNote = { ...currentNote, delay: maths }; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
       prevNote = currentNote.time;
       newMusicArr.push(currentNote);
     }
